@@ -70,7 +70,7 @@ async function run() {
             }
         });
 
-        //load specific city corporation user info by id from database collection for navbar
+        //load specific city corporation user info by email from database collection for navbar for login
         app.get('/cityCorporationUsers/searchByEmail/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
@@ -78,7 +78,7 @@ async function run() {
             res.send(specificCityCorpUser);
         })
 
-        //load specific city corporation user info by id from database collection for navbar
+        //load specific city corporation user info by id from database collection for navbar for display photo
         app.get('/cityCorporationUsers/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
@@ -86,7 +86,7 @@ async function run() {
             res.send(specificCityCorpUser);
         })
 
-        //load city corporation users from database collection
+        //load city corporation users from database collection for dashboard
         app.get('/cityCorporationUsers', verifyToken, async (req, res) => {
             console.log(req.deCodedEmail);
             const cursor = cityCorporationUsers.find({});
@@ -131,7 +131,7 @@ async function run() {
             }
         });
 
-        //load specific truck driver info by nid from database collection for login for truck driver
+        //load specific truck driver info by nid from database collection for login for truck driver in navbar
         app.get('/truckDriverUsers/details/:nid', async (req, res) => {
             const nid = req.params.nid;
             const query = { nid: nid };
@@ -139,7 +139,7 @@ async function run() {
             res.send(specificTruckDriver);
         })
         
-        //load specific truck driver info by id from database collection for navbar
+        //load specific truck driver info by id from database collection for navbar for displaying photo
         app.get('/truckDriverUsers/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
@@ -147,7 +147,7 @@ async function run() {
             res.send(specificTruckDriver);
         })
 
-        //load all truck driver users from database collection
+        //load all truck driver users from database collection for dashboard
         app.get('/truckDriverUsers', async (req, res) => {
             const cursor = truckDriverUsers.find({});
             const truckDrivers = await cursor.toArray();
