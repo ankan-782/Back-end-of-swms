@@ -52,7 +52,7 @@ async function run() {
             const query = { email: email };
             const existingUser = await cityCorporationUsers.findOne(query);
             if (existingUser) {
-                res.json({ message: 'Admin User is already exist' })
+                res.json({ message: 'এই ইমেইল আইডি দিয়ে ইতিমধ্যে এডমিন ইউজার তৈরি হয়েছে' })
             }
             else {
                 const displayName = req.body.name;
@@ -75,7 +75,12 @@ async function run() {
             const email = req.params.email;
             const query = { email: email };
             const specificCityCorpUser = await cityCorporationUsers.findOne(query);
-            res.send(specificCityCorpUser);
+            if (!specificCityCorpUser) {
+                res.json({ message: 'এই ইমেইল আইডি কোন এডমিন ইউজার তৈরি হয়নি' })
+            }
+            else {
+                res.send(specificCityCorpUser);
+            }
         })
 
         //load specific city corporation user info by id from database collection for navbar for display photo
@@ -101,7 +106,7 @@ async function run() {
             const query = { nid: nid };
             const existingUser = await truckDriverUsers.findOne(query);
             if (existingUser) {
-                res.json({ message: 'User is already exist' })
+                res.json({ message: 'এই এন আই ডি দিয়ে ইতিমধ্যে ইউজার তৈরি হয়েছে' })
             }
             else {
                 const displayName = req.body.name;
@@ -136,9 +141,14 @@ async function run() {
             const nid = req.params.nid;
             const query = { nid: nid };
             const specificTruckDriver = await truckDriverUsers.findOne(query);
-            res.send(specificTruckDriver);
+            if (!specificTruckDriver) {
+                res.json({ message: 'এই এন আই ডি দিয়ে কোন ইউজার তৈরি হয়নি' })
+            }
+            else {
+                res.send(specificTruckDriver);
+            }
         })
-        
+
         //load specific truck driver info by id from database collection for navbar for displaying photo
         app.get('/truckDriverUsers/:id', async (req, res) => {
             const id = req.params.id;
