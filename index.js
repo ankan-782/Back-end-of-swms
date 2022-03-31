@@ -4,13 +4,12 @@ const ObjectId = require('mongodb').ObjectId;
 const admin = require("firebase-admin");
 const cors = require('cors');
 require('dotenv').config();
-const serviceAccount = require('./smart-waste-management-firebase-adminsdk.json');
 const fileUpload = require('express-fileupload');
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 });
