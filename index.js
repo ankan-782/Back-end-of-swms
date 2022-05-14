@@ -135,7 +135,7 @@ async function run() {
             }
         });
 
-        //load specific truck driver info by nid from database collection for login for truck driver in navbar
+        //load specific truck driver info by nid from database collection for login for truck driver in navbar and also for searching specific driver
         app.get('/truckDriverUsers/details/:nid', async (req, res) => {
             const nid = req.params.nid;
             const query = { nid: nid };
@@ -146,6 +146,40 @@ async function run() {
             else {
                 res.send(specificTruckDriver);
             }
+        })
+
+        //update specific truckDriver infos
+        app.put('/truckDriverUsers/details/:nid', async (req, res) => {
+            const nid = req.params.nid;
+            const updatedDriverInfo = req.body;
+            const pic = req.files.photo;
+            const picData = pic.data;
+            const enCodedPic = picData.toString('base64');
+            const photoBuffer = Buffer.from(enCodedPic, 'base64');
+            const filter = { nid: nid };
+            const updateDoc = {
+                $set: {
+                    displayName: updatedDriverInfo.displayName,
+                    age: updatedDriverInfo.age,
+                    gender: updatedDriverInfo.gender,
+                    phone: updatedDriverInfo.phone,
+                    pin: updatedDriverInfo.pin,
+                    nid: updatedDriverInfo.nid,
+                    dln: updatedDriverInfo.dln,
+                    address: updatedDriverInfo.address,
+                    photo: photoBuffer
+                },
+            };
+            const result = await truckDriverUsers.updateOne(filter, updateDoc);
+            res.json(result);
+        })
+
+        //delete specific driver
+        app.delete('/truckDriverUsers/details/:nid', async (req, res) => {
+            const nid = req.params.nid;
+            const query = {nid: nid};
+            const result = await truckDriverUsers.deleteOne(query);
+            res.json(result);
         })
 
         //load specific truck driver info by id from database collection for navbar for displaying photo
