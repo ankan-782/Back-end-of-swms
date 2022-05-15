@@ -185,10 +185,7 @@ async function run() {
         //update and insert specific truckDriver info (stsArea, truckNo, cityCorp)
         app.put('/truckDriverUsers/updateDailyTask', async (req, res) => {
             const updatedDriverInfo = req.body;
-            console.log(updatedDriverInfo);
             const filter = { nid: updatedDriverInfo?.nid };
-            console.log(filter);
-            // const options = { upsert: true };
             const updateDoc = {
                 $set: {
                     stsArea: updatedDriverInfo.stsArea,
