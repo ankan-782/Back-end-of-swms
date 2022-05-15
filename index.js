@@ -136,7 +136,7 @@ async function run() {
         });
 
         //load specific truck driver info by nid from database collection for login for truck driver in navbar and also for searching specific driver
-        app.get('/truckDriverUsers/details/:nid', async (req, res) => {
+        app.get('/truckDriverUsers/storeAndUpdateInfo/:nid', async (req, res) => {
             const nid = req.params.nid;
             const query = { nid: nid };
             const specificTruckDriver = await truckDriverUsers.findOne(query);
@@ -149,7 +149,7 @@ async function run() {
         })
 
         //update specific truckDriver infos
-        app.put('/truckDriverUsers/details/:nid', async (req, res) => {
+        app.put('/truckDriverUsers/storeAndUpdateInfo/:nid', async (req, res) => {
             const nid = req.params.nid;
             const updatedDriverInfo = req.body;
             const pic = req.files.photo;
@@ -175,10 +175,28 @@ async function run() {
         })
 
         //delete specific driver
-        app.delete('/truckDriverUsers/details/:nid', async (req, res) => {
+        app.delete('/truckDriverUsers/storeAndUpdateInfo/:nid', async (req, res) => {
             const nid = req.params.nid;
-            const query = {nid: nid};
+            const query = { nid: nid };
             const result = await truckDriverUsers.deleteOne(query);
+            res.json(result);
+        })
+
+        //update and insert specific truckDriver info (stsArea, truckNo, cityCorp)
+        app.put('/truckDriverUsers/updateDailyTask', async (req, res) => {
+            const updatedDriverInfo = req.body;
+            console.log(updatedDriverInfo);
+            const filter = { nid: updatedDriverInfo?.nid };
+            console.log(filter);
+            // const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    stsArea: updatedDriverInfo.stsArea,
+                    truckNo: updatedDriverInfo.truckNo,
+                    cityCorp: updatedDriverInfo.cityCorp,
+                },
+            };
+            const result = await truckDriverUsers.updateOne(filter, updateDoc);
             res.json(result);
         })
 
