@@ -1,7 +1,6 @@
 const express = require('express');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const ObjectId = require('mongodb').ObjectId;
-const admin = require("firebase-admin");
 const cors = require('cors');
 require('dotenv').config();
 const fileUpload = require('express-fileupload');
@@ -9,10 +8,6 @@ const fileUpload = require('express-fileupload');
 const app = express();
 const port = process.env.PORT || 5000;
 
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-});
 
 //middleware
 app.use(cors());
@@ -21,21 +16,6 @@ app.use(fileUpload());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.wipcb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-
-
-async function verifyToken(req, res, next) {
-    if (req.headers?.authorization?.startsWith('Bearer ')) {
-        const idToken = req.headers?.authorization.split(' ')[1];
-        try {
-            const deCodedUser = await admin.auth().verifyIdToken(idToken);
-            req.deCodedEmail = deCodedUser?.email;
-        }
-        catch {
-
-        }
-    }
-    next();
-}
 
 async function run() {
     try {
@@ -91,7 +71,7 @@ async function run() {
         })
 
         //load city corporation users from database collection for dashboard
-        app.get('/cityCorporationUsers', verifyToken, async (req, res) => {
+        app.get('/cityCorporationUsers', async (req, res) => {
             console.log(req.deCodedEmail);
             const cursor = cityCorporationUsers.find({});
             const cityCorpUsers = await cursor.toArray();
